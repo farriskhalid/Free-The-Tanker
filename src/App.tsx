@@ -224,7 +224,7 @@ function HormuzMap({
       role="img"
       aria-label="Map of the Strait of Hormuz"
     >
-      <img src="/hormuz-map.png" alt="" aria-hidden="true" />
+      <img src={`${import.meta.env.BASE_URL}hormuz-map.png`} alt="" aria-hidden="true" />
       <svg className="map-overlay" viewBox="0 0 768 420" aria-hidden="true">
         {(rocketIsArmed || rocketIsLaunching) && (
           <g
