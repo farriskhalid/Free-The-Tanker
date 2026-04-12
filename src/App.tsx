@@ -205,11 +205,13 @@ function HormuzMap({
   guessesLeft: number;
   status: GameStatus;
 }) {
-  const progress = status === "won"
+  const targetProgress = status === "won"
     ? answerLength
     : correctSlots.filter(Boolean).length;
+  const [displayedProgress, setDisplayedProgress] = useState(targetProgress);
   const shipPath = useMemo(() => getDynamicShipPath(answerLength), [answerLength]);
-  const ship = shipPath[Math.min(progress, shipPath.length - 1)];
+  const progress = Math.min(displayedProgress, shipPath.length - 1);
+  const ship = shipPath[progress];
   const isMoving = progress > 0 && status !== "lost";
   const rocketIsArmed = status === "playing" && guessesLeft === 1;
   const rocketIsLaunching = status === "lost";
@@ -217,6 +219,25 @@ function HormuzMap({
     "--rocket-end-x": `${ship.x}px`,
     "--rocket-end-y": `${ship.y}px`,
   } as CSSProperties;
+
+  useEffect(() => {
+    if (targetProgress < displayedProgress) {
+      setDisplayedProgress(targetProgress);
+      return;
+    }
+
+    if (targetProgress === displayedProgress) {
+      return;
+    }
+
+    const movementTimer = window.setTimeout(() => {
+      setDisplayedProgress((currentProgress) =>
+        Math.min(currentProgress + 1, targetProgress),
+      );
+    }, 520);
+
+    return () => window.clearTimeout(movementTimer);
+  }, [displayedProgress, targetProgress]);
 
   return (
     <div
@@ -226,6 +247,15 @@ function HormuzMap({
     >
       <img src={`${import.meta.env.BASE_URL}hormuz-map.png`} alt="" aria-hidden="true" />
       <svg className="map-overlay" viewBox="0 0 768 420" aria-hidden="true">
+        {status === "won" && (
+          <g transform="translate(468 54)">
+            <g className="toll-arrow">
+              <rect className="toll-arrow-sign" x="-35" y="-26" width="70" height="52" rx="8" />
+              <path className="toll-arrow-shaft" d="M-20 0H12" />
+              <path className="toll-arrow-head" d="M6 -14L24 0L6 14Z" />
+            </g>
+          </g>
+        )}
         {(rocketIsArmed || rocketIsLaunching) && (
           <g
             className={`rocket ${rocketIsLaunching ? "launching" : "armed"}`}
@@ -401,14 +431,6 @@ export default function App() {
         </header>
 
         <section className="hormuz-card" aria-label="Hormuz passage">
-          {status === "won" && (
-            <div className="celebration" aria-hidden="true">
-              {Array.from({ length: 18 }, (_, index) => (
-                <span key={`confetti-${index}`} />
-              ))}
-            </div>
-          )}
-
           <HormuzMap
             answerLength={answer.length}
             correctSlots={correctSlots}
