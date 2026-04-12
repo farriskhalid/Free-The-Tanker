@@ -2,6 +2,9 @@
 
 A small tanker rescue word guessing game built with React, TypeScript, and Vite.
 
+## View it on github pages 
+https://farriskhalid.github.io/Free-The-Tanker/
+
 ## Run locally
 
 ```bash
