@@ -5,7 +5,9 @@ const MAX_GUESSES = 5;
 const KEY_ROWS = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"];
 
 const ANSWERS = [
-  "TRUMP"
+  "WRONG",
+  "OIL",
+  "TARRIFS"
 ];
 
 type ShipStop = {
