@@ -348,12 +348,23 @@ h1 {
 }
 
 .guess-strip {
+  --dynamic-tile-size: clamp(
+    42px,
+    calc((var(--board-width) - (var(--tile-gap) * var(--tile-gap-count))) / var(--answer-length)),
+    64px
+  );
   position: relative;
   z-index: 1;
   display: grid;
-  width: min(100%, var(--board-width));
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  width: 100%;
+  grid-template-columns: repeat(var(--answer-length), var(--dynamic-tile-size));
   gap: var(--tile-gap);
+  justify-content: center;
+}
+
+.guess-strip .tile {
+  width: var(--dynamic-tile-size);
+  height: var(--dynamic-tile-size);
 }
 
 .hormuz-card .message {

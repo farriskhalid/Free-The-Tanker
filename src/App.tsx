@@ -321,6 +321,10 @@ export default function App() {
     () => getLockedCorrectLetters(guesses, answer.length),
     [answer, guesses],
   );
+  const guessStripStyle = {
+    "--answer-length": answer.length,
+    "--tile-gap-count": Math.max(answer.length - 1, 0),
+  } as CSSProperties;
   const openSlots = lockedLetters.filter((tile) => tile === null).length;
   const guessesLeft = MAX_GUESSES - guesses.length;
 
@@ -446,7 +450,11 @@ export default function App() {
             {MAX_GUESSES}.
           </p>
 
-          <div className="guess-strip" aria-label="Current guess">
+          <div
+            className="guess-strip"
+            style={guessStripStyle}
+            aria-label="Current guess"
+          >
             {displayTiles.map((tile, tileIndex) => (
               <div
                 className={`tile ${tile.state} ${tile.letter ? "filled" : ""}`}
